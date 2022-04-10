@@ -35,7 +35,7 @@ namespace RobertJohnsonEmployeesDatabase
                 conString = Properties.Settings.Default.EmployeesConnectionString;
 
                 //Set connection string for new DB connection object
-                objConnect.connection_string = conString;
+                objConnect.Connection_string = conString;
                 // Loads the SQL statement saved to settings into object (Select *)
                 objConnect.Sql = Properties.Settings.Default.SQL;
                 // Handing dataset over from connection
@@ -60,6 +60,7 @@ namespace RobertJohnsonEmployeesDatabase
             txtLastName.Text = dRow.ItemArray.GetValue(2).ToString();
             txtJobTitle.Text = dRow.ItemArray.GetValue(3).ToString();
             txtDepartment.Text = dRow.ItemArray.GetValue(4).ToString();
+            txtRecordNum.Text = $"Record {inc + 1} of {MaxRows}";
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
@@ -111,6 +112,92 @@ namespace RobertJohnsonEmployeesDatabase
             else
             {
                 MessageBox.Show("Last Record");
+            }
+        }
+
+        private void BtnAddNew_Click(object sender, EventArgs e)
+        {
+            txtFirstName.Clear();
+            txtLastName.Clear();
+            txtJobTitle.Clear();
+            txtDepartment.Clear();
+            btnAddNew.Enabled = false;
+            btnSave.Enabled = true;
+            btnCancel.Enabled = true;
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            NavigateRecords();
+            btnCancel.Enabled = false;
+            btnSave.Enabled = false;
+            btnAddNew.Enabled = true;
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            DataRow row = ds.Tables[0].NewRow();
+            row[1] = txtFirstName.Text;
+            row[2] = txtLastName.Text;
+            row[3] = txtJobTitle.Text;
+            row[4] = txtDepartment.Text;
+
+            ds.Tables[0].Rows.Add(row);
+            try
+            {
+                objConnect.UpdateDatabase(ds);
+                MaxRows += 1;
+                inc = MaxRows - 1;
+
+                MessageBox.Show("Database Updated");
+                NavigateRecords();
+            } 
+            catch(Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+            btnCancel.Enabled = false;
+            btnSave.Enabled = false;
+            btnAddNew.Enabled = true;
+            
+        }
+
+        private void BtnUpdate_Click(object sender, EventArgs e)
+        {
+            DataRow row = ds.Tables[0].Rows[inc];
+
+            row[1] = txtFirstName.Text;
+            row[2] = txtLastName.Text;
+            row[3] = txtJobTitle.Text;
+            row[4] = txtDepartment.Text;
+
+            try
+            {
+                objConnect.UpdateDatabase(ds);
+                MessageBox.Show("Record Updated");
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ds.Tables[0].Rows[inc].Delete();
+                objConnect.UpdateDatabase(ds);
+
+                MaxRows = ds.Tables[0].Rows.Count;
+                inc--;
+                NavigateRecords();
+
+                MessageBox.Show("Record Deleted");
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
             }
         }
     }

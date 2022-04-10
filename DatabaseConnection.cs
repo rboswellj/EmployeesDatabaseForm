@@ -22,7 +22,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         }
 
-        public string connection_string
+        public string Connection_string
         {
             set { strCon = value; }
         }
@@ -41,6 +41,13 @@ namespace RobertJohnsonEmployeesDatabase
             da_1.Fill(dat_set, "Table_Data_1");
             con.Close();
             return dat_set;
+        }
+
+        public void UpdateDatabase(System.Data.DataSet ds)
+        {
+            // Need to set up CommandBuilder to update DB
+            System.Data.SqlClient.SqlCommandBuilder cb = new System.Data.SqlClient.SqlCommandBuilder(da_1);
+            cb.DataAdapter.Update(ds.Tables[0]);
         }
     }
 }
