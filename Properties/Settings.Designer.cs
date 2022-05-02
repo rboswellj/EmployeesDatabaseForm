@@ -26,9 +26,8 @@ namespace RobertJohnsonEmployeesDatabase.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Robert\\OneDrive\\Docu" +
-            "ments\\School\\cSharp2\\RobertJohnsonEmployeesDB\\cSharpSqlDB\\Employees.mdf;Integrat" +
-            "ed Security=True;Connect Timeout=30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Resources\\Emp" +
+            "loyees.mdf;Integrated Security=True;Connect Timeout=30")]
         public string EmployeesConnectionString {
             get {
                 return ((string)(this["EmployeesConnectionString"]));

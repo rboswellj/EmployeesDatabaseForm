@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+/*  Robert Johnson
+    CIT 243
+    Employee Database Project
+*/
 
 namespace RobertJohnsonEmployeesDatabase
 {
@@ -17,12 +16,15 @@ namespace RobertJohnsonEmployeesDatabase
             InitializeComponent();
         }
 
+        // DB connection object and connection string
         DatabaseConnection objConnect;
         string conString;
 
+        // Dataset
         DataSet ds;
         DataRow dRow;
 
+        // Increment variable and last row index
         int MaxRows;
         int inc = 0;
 
@@ -55,6 +57,8 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void NavigateRecords()
         {
+            // Method to load values from current row of DB into text boxes
+            // Also displays current Record number within form
             dRow = ds.Tables[0].Rows[inc];
             txtFirstName.Text = dRow.ItemArray.GetValue(1).ToString();
             txtLastName.Text = dRow.ItemArray.GetValue(2).ToString();
@@ -65,6 +69,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
+            // If not yet at final index, go to next record
             if(inc != MaxRows -1)
             {
                 inc++;
@@ -78,6 +83,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnBack_Click(object sender, EventArgs e)
         {
+            // If not at first index, goes to previous record
             if (inc > 0)
             {
                 inc--;
@@ -91,6 +97,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnFirst_Click(object sender, EventArgs e)
         {
+            // If not already viewing first record, go to first
             if(inc != 0)
             {
                 inc = 0;
@@ -104,6 +111,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnLast_Click(object sender, EventArgs e)
         {
+            // If not already at last record, go to last
             if(inc != MaxRows - 1)
             {
                 inc = MaxRows - 1;
@@ -117,6 +125,8 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnAddNew_Click(object sender, EventArgs e)
         {
+            // Clears all text boxes and enables the save and cancel buttons
+            // within the add new record group
             txtFirstName.Clear();
             txtLastName.Clear();
             txtJobTitle.Clear();
@@ -128,6 +138,7 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
+            // Cancels the add new record process
             NavigateRecords();
             btnCancel.Enabled = false;
             btnSave.Enabled = false;
@@ -136,29 +147,38 @@ namespace RobertJohnsonEmployeesDatabase
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            DataRow row = ds.Tables[0].NewRow();
-            row[1] = txtFirstName.Text;
-            row[2] = txtLastName.Text;
-            row[3] = txtJobTitle.Text;
-            row[4] = txtDepartment.Text;
-
-            ds.Tables[0].Rows.Add(row);
-            try
+            // saves new record
+            if(txtFirstName.Text != String.Empty && txtLastName.Text != String.Empty)
             {
-                objConnect.UpdateDatabase(ds);
-                MaxRows += 1;
-                inc = MaxRows - 1;
+                DataRow row = ds.Tables[0].NewRow();
+                row[1] = txtFirstName.Text;
+                row[2] = txtLastName.Text;
+                row[3] = txtJobTitle.Text;
+                row[4] = txtDepartment.Text;
 
-                MessageBox.Show("Database Updated");
-                NavigateRecords();
-            } 
-            catch(Exception err)
-            {
-                MessageBox.Show(err.Message);
+                ds.Tables[0].Rows.Add(row);
+                try
+                {
+                    objConnect.UpdateDatabase(ds);
+                    MaxRows++;
+                    inc = MaxRows - 1;
+                    NavigateRecords();
+                    MessageBox.Show("Database Updated");
+                    
+                } 
+                catch(Exception err)
+                {
+                    MessageBox.Show(err.Message);
+                }
+                btnCancel.Enabled = false;
+                btnSave.Enabled = false;
+                btnAddNew.Enabled = true;
+
             }
-            btnCancel.Enabled = false;
-            btnSave.Enabled = false;
-            btnAddNew.Enabled = true;
+            else
+            {
+                MessageBox.Show("Please enter a first and last name");
+            }
             
         }
 
@@ -200,5 +220,7 @@ namespace RobertJohnsonEmployeesDatabase
                 MessageBox.Show(err.Message);
             }
         }
+
+
     }
 }

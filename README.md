@@ -1,3 +1,9 @@
+Robert Johnson
+CIT 243
+C# 2
+Employee DataBase Project
+
+
 This is an assignment for my C#2 class. It uses a windows form to interact with a
 SQL Express localDB server. 
 
